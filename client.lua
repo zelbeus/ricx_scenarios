@@ -201,7 +201,7 @@ AddEventHandler("ricx_scenarios:open", function()
                 local hash = GetScenarioPointType(scenario)
                 for c, v in pairs(Config.Scenarios) do
                     if GetHashKey(v[1]) == hash then
-                        elements[i] = {label = v[1], value = "scenario"..i, desc = "Play this", hash = scenario}
+                        elements[i] = {label = v[2] or v[1], value = "scenario"..i, desc = "Play this", hash = scenario}
                     end
                 end
             end
