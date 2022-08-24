@@ -3,7 +3,7 @@ Config = {}
 Config.StartKey = 0xD8F73058 -- U 
 
 Config.Scenarios = {
-	{"ANIMAL_CARCASS_EGRET_PARTS", },
+	{"ANIMAL_CARCASS_EGRET_PARTS", "Carcass Parts"},
 	{"CC_PROP_CAMP_FIRE_SEATED_DRINKING", },
 	{"CC_WORLD_HUMAN_CAMP_FIRE_STAND", },
 	{"CIG_CARD_ACT_01", },
