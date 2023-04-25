@@ -162,9 +162,15 @@ end
 
 
 MenuData = {}
-TriggerEvent("redemrp_menu_base:getData",function(call)
-    MenuData = call
-end)
+    if Config.framework == "rsg" then
+        TriggerEvent("rsg-menubase:getData",function(call)
+            MenuData = call
+    end)
+    elseif Config.framework == "redemrp" then
+        TriggerEvent("redemrp_menu_base:getData",function(call)
+            MenuData = call
+    end)
+end
 
 Citizen.CreateThread(function() --
     while true do
@@ -190,18 +196,24 @@ end
 RegisterNetEvent("ricx_scenarios:open")
 AddEventHandler("ricx_scenarios:open", function()
     MenuData.CloseAll()
+    
     local elements = {}
 
     local DataStruct = DataView.ArrayBuffer(256 * 4)
-    local is_data_exists = Citizen.InvokeNative(0x345EC3B7EBDE1CB5, GetEntityCoords(PlayerPedId()), 1.5,
-        DataStruct:Buffer(), 10)
+    local is_data_exists = Citizen.InvokeNative(0x345EC3B7EBDE1CB5, GetEntityCoords(PlayerPedId()), 1.5, DataStruct:Buffer(), 10)
+        print("Starts", is_data_exists)
         if is_data_exists ~= false then
             for i = 1, is_data_exists, 1 do
                 local scenario = DataStruct:GetInt32(8 * i)
+                print(scenario)
                 local hash = GetScenarioPointType(scenario)
                 for c, v in pairs(Config.Scenarios) do
                     if GetHashKey(v[1]) == hash then
-                        elements[i] = {label = v[2] or v[1], value = "scenario"..i, desc = "Play this", hash = scenario}
+						if v[2] == "" then
+                        	elements[i] = {label = v[1], value = "scenario"..i, desc = "Play this", hash = scenario}
+						else
+							elements[i] = {label = v[2], value = "scenario"..i, desc = "Play this", hash = scenario}
+						end
                     end
                 end
             end
@@ -215,8 +227,7 @@ AddEventHandler("ricx_scenarios:open", function()
         },
         function(data, menu)
             if data.current.value ~= "finish" then
-                print(data.current.hash)
-                TaskUseScenarioPoint(PlayerPedId(), data.current.hash , "" , -1.0, true, false, 0, false, -1.0, true)
+                TaskUseScenarioPoint(PlayerPedId(), data.current.hash, "" , -1.0, true, false, 0, false, -1.0, true)
                 menu.close()
             else
                 ClearPedTasks(PlayerPedId())
